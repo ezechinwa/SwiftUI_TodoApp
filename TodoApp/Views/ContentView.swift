@@ -9,17 +9,30 @@ import SwiftUI
 
 struct ContentView: View {
     
-    var taskStore:TaskStore
+    @ObservedObject var taskStore:TaskStore
     @State var sheetModelViewPresented = false
     
     var body: some View {
         
         NavigationView {
-            List(taskStore.tasks){task in
-                Text(task.name)
+            List{
+                ForEach(taskStore.tasks){task in
+                        Text(task.name)
+                    }
+                .onDelete { (IndexSet) in
+                    self.taskStore.tasks.remove(atOffsets: IndexSet)
+                }
+      
+                .onMove { (IndexSet, Int) in
+                    self.taskStore.tasks.move(fromOffsets: IndexSet, toOffset: Int)
+                }
+            
             }
+                
             .navigationBarTitle("Tasks")
-            .navigationBarItems(trailing:
+            .navigationBarItems(
+                leading: EditButton(),
+                trailing:
                 Button(action: {
                     self.sheetModelViewPresented = true
                 }) {
@@ -27,7 +40,7 @@ struct ContentView: View {
                 }
             )
                 .sheet(isPresented: $sheetModelViewPresented) {
-                  NewTaskView()
+                    NewTaskView(taskStore: self.taskStore)
 
             }
 

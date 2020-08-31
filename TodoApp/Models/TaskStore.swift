@@ -5,10 +5,11 @@
 //  Created by C on 16/08/2020.
 //  Copyright © 2020 Gistech. All rights reserved.
 //
+import  Combine
 
-class TaskStore {
+class TaskStore: ObservableObject{
     
-    var tasks:[Task] = [
+    @Published var tasks:[Task] = [
       "Watch Netflix",
       "Play video games",
       "Study for an hour ",
